@@ -9,7 +9,7 @@ const metronomeStatus = document.getElementById("metronomeStatus");
 const modeStatus = document.getElementById("modeStatus");
 
 const normalSounds = {
-  'q': new Audio('assets/e_low.mp3'),
+  'q': new Audio('assets/E_low.mp3'),
   'w': new Audio('assets/A.mp3'),
   'e': new Audio('assets/D.mp3'),
   'r': new Audio('assets/G.mp3'),
