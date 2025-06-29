@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gibson Chord App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-wrapper">
+    <div class="left-panel">
+      <h1>PLAY THE CHORDS<br />WITH KEYBOARD</h1>
+
+      <div class="keyboard-grid">
+        <div>
+          <h2>Normal Strings</h2>
+          <div class="keys">
+            <span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span><span>Y</span>
+          </div>
+          <p>Premi <strong>SPACE</strong> per attivare il metronomo</p>
+          <p><strong>N</strong>: normal strings<br>
+<strong>D</strong>: Smoke on the water<br>
+<strong>S</strong>: Satisfaction</p>
+        </div>
+
+        <div>
+          <h2>Song Mode</h2>
+          <div class="keys">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+          </div>
+          <p>Premi <strong>0</strong> per stoppare il suono</p>
+        </div>
+      </div>
+
+      <div class="status">
+        <p><strong>Modalità:</strong> <span id="modeStatus">Corde Vuote</span></p>
+        <p><strong>Metronomo:</strong> <span id="metronomeStatus">Spento</span></p>
+      </div>
+
+      <div class="albums">
+        <div class="album">
+          <img src="assets/deep purple.png" alt="Smoke on the Water" />
+          <div class="tabs">
+            <strong> TABS</strong><br />1‒2‒3<br />1‒2‒4‒3<br />1‒2‒3‒2‒1
+          </div>
+        </div>
+        <div class="album">
+          <img src="assets/satisfaction.png" alt="Satisfaction" />
+          <div class="tabs">
+               <strong> TABS</strong><br />1‒1<br />1‒2‒3<br />3‒3‒2‒3‒2‒1
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <img src="assets/guitar.png" alt="Guitar" class="guitar" />
+    </div>
+
+    <script src="script.js"></script>
+  </div>
+  <div class="string-lights">
+  <div id="string-e" class="string-glow"></div>
+  <div id="string-a" class="string-glow"></div>
+  <div id="string-d" class="string-glow"></div>
+  <div id="string-g" class="string-glow"></div>
+  <div id="string-b" class="string-glow"></div>
+  <div id="string-e-high" class="string-glow"></div>
+</div>
+</body>
+</html>
