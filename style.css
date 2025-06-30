@@ -1,129 +1,66 @@
-/* Updated style.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap');
-
 body {
   margin: 0;
   font-family: 'Lato', sans-serif;
- background: linear-gradient(to right, #000000 0%, #8b0000 100%);
+  background: linear-gradient(to right, #000000 0%, #8b0000 100%);
   color: white;
+  overflow-x: hidden;
 }
 
 .app-wrapper {
+  padding-left: 3vw;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0px;
-  max-width: 1400px;
-  margin: auto;
+  flex-wrap: wrap;
+  gap: 4vw;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.left-panel,
+.right-panel {
+  flex: 1 1 45%;
 }
 
 .left-panel {
   width: 45%;
+  padding-left: 1vw;
 }
 
 .right-panel {
   width: 55%;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  padding-left: 5vw;
+  align-items: flex-start;
+  height: 100%;
+  overflow: hidden;
+}
+
+.guitar-container {
+  width: 100%;
+  max-height: 100%;
+  padding-top: 0;
+}
+
+.guitar-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 9 / 16;
+  align-self: flex-start;
+  overflow: hidden;
 }
 
 .guitar {
-  width: auto;
-  max-height: 110vh;
-  object-fit: contain;
-  margin-left: 100px;
-}
-
-h1 {
-  font-size: 72px;
-  line-height: 1.1;
-  margin-bottom: 30px;
-  font-family: 'Anton', sans-serif;
-}
-
-h2 {
-  font-size: 26px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.section {
-  margin-bottom: 30px;
-}
-
-.keys {
-  display: flex;
-  gap: 8px;
-  margin: 10px 0;
-}
-
-.keys span {
-  border: 2px solid white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 24px;
-  display: inline-block;
-  margin: 0 4px;
-  font-weight: bold;
-  background: white;
-  color: #300000;
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-.active-key {
-  background: #a70505 !important;
-  color: black !important;
-  box-shadow: 0 0 10px 3px rgb(255, 255, 255);
-}
-
-p {
-  font-size: 19px;
-  margin: 10px 0;
-  line-height: 1.6;
-}
-
-strong {
-  font-weight: bold;
-}
-
-.albums {
-  display: flex;
-  gap: 40px;
-  margin-top: 40px;
-}
-
-.album {
-  text-align: center;
-  font-size: 16px;
-}
-
-.album img {
-  width: 120px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.tabs {
-  font-family: monospace;
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.07);
-  padding: 10px 14px;
-  border-radius: 8px;
-}
-
-.keyboard-grid {
-  display: flex;
-  justify-content: space-between;
-  gap: 60px;
-  margin-top: 30px;
-}
-
-.status {
-  margin-top: 20px;
-  font-size: 18px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .string-lights {
@@ -137,30 +74,131 @@ strong {
 
 .string-glow {
   position: absolute;
-width: 6px;
-height: 57.3%;
-  background: rgb(238, 2, 2);
+  top: 0%;
+  height: 44%;
+  width: 0.8%;
+  background: rgb(226, 18, 18);
   opacity: 0;
-  box-shadow: 0 0 10px 4px rgba(255, 0, 0, 0.8);
-  transition: opacity 0.1s ease, transform 0.1s ease;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0.6vw 0.25vw rgb(201, 24, 24);
+  transition: opacity 0.2s ease;
 }
 
-/* Posiziona ogni corda (da regolare con prove) */
-#string-e        { left: 72.5%; }
-#string-a        { left: 73.8%; }
-#string-d        { left: 75.2%; }
-#string-g        { left: 76.8%; }
-#string-b        { left: 78.2%; }
-#string-e-high   { left: 79.4%; }
+#string-e        { left: 37.45%; }
+#string-a        { left: 40.5%; }
+#string-d        { left: 43.2%; }
+#string-g        { left: 46.5%; }
+#string-b        { left: 49.6%; }
+#string-e-high   { left: 52.5%; }
 
-/* Classe attiva */
 .string-glow.active {
   opacity: 1;
-  transform: scaleY(1.1);
+  transform: scaleY(1.1) translateX(-50%);
 }
 
+/* Resto del layout */
+h1 {
+  font-size: 5vw;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  font-family: 'Anton', sans-serif;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.keys {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.6rem 0;
+}
+
+.keys span {
+  border: 0.125rem solid white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  display: inline-block;
+  margin: 0 0.25rem;
+  font-weight: bold;
+  background: white;
+  color: #300000;
+  box-shadow: 0.125rem 0.125rem 0.25rem rgba(0,0,0,0.3);
+}
+
+.active-key {
+  background: #a70505 !important;
+  color: black !important;
+  box-shadow: 0 0 0.625rem 0.1875rem rgb(255, 255, 255);
+}
+
+p {
+  font-size: 1.2rem;
+  margin: 0.6rem 0;
+  line-height: 1.6;
+}
+
+strong {
+  font-weight: bold;
+}
+
+.albums {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.album {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.album img {
+  width: 7.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.tabs {
+  font-family: monospace;
+  font-size: 1.125rem;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+}
+
+.keyboard-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 4vw;
+  margin-top: 2rem;
+}
+
+.status {
+  margin-top: 1.25rem;
+  font-size: 1.125rem;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   .app-wrapper {
-    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: auto;
+  }
+
+  .left-panel,
+  .right-panel {
+    flex: 1 1 100%;
+    width: 100%;
   }
 }
