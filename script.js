@@ -87,11 +87,11 @@ function toggleMetronome() {
   if (isMetronomePlaying) {
     metronome.pause();
     metronome.currentTime = 0;
-    document.getElementById("metronomeStatus").innerHTML = "Spento";
+    document.getElementById("metronomeStatus").textContent = "Spento";
   } else {
     metronome.currentTime = 0;
     metronome.play();
-    document.getElementById("metronomeStatus").innerHTML = "Attivo";
+    document.getElementById("metronomeStatus").textContent = "Attivo";
   }
   isMetronomePlaying = !isMetronomePlaying;
 }
@@ -103,7 +103,7 @@ function switchMode(newMode) {
     'smoke': 'Smoke on the Water',
     'satisfaction': 'Satisfaction'
   };
-  modeStatus.innerHTML = `<strong>Modalità:</strong> ${labels[newMode]}`;
+  modeStatus.textContent = labels[newMode];
 }
 
 document.addEventListener("keydown", (e) => {

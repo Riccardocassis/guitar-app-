@@ -36,30 +36,42 @@
         </section>
       </div>
 
-      <section class="instructions-box">
-        <h2>Comandi</h2>
-        <div class="instructions-grid">
-          <div class="instruction-item">
-            <strong>SPAZIO</strong> → Attiva/Disattiva metronomo
+      <section class="control-panel">
+        <h2>Pannello di Controllo</h2>
+        
+        <!-- Status corrente -->
+        <div class="current-status">
+          <div class="status-item">
+            <span class="status-label">Modalità:</span>
+            <span id="modeStatus" class="status-value">Corde Vuote</span>
           </div>
-          <div class="instruction-item">
-            <strong>0</strong> → Ferma suono
-          </div>
-          <div class="instruction-item">
-            <strong>N</strong> → Corde vuote
-          </div>
-          <div class="instruction-item">
-            <strong>D</strong> → Smoke on the water
-          </div>
-          <div class="instruction-item">
-            <strong>S</strong> → Satisfaction
+          <div class="status-item">
+            <span class="status-label">Metronomo:</span>
+            <span id="metronomeStatus" class="status-value">Spento</span>
           </div>
         </div>
-      </section>
 
-      <section class="status" role="status" aria-live="polite">
-        <p id="modeStatus"><strong>Modalità:</strong> Corde Vuote</p>
-        <p id="metronomeStatus"><strong>Metronomo:</strong> Spento</p>
+        <!-- Comandi disponibili -->
+        <div class="commands-section">
+          <h3>Comandi Disponibili</h3>
+          <div class="instructions-grid">
+            <div class="instruction-item">
+              <strong>SPAZIO</strong> → Attiva/Disattiva metronomo
+            </div>
+            <div class="instruction-item">
+              <strong>0</strong> → Ferma suono
+            </div>
+            <div class="instruction-item">
+              <strong>N</strong> → Corde vuote
+            </div>
+            <div class="instruction-item">
+              <strong>D</strong> → Smoke on the water
+            </div>
+            <div class="instruction-item">
+              <strong>S</strong> → Satisfaction
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="albums" aria-label="Tablature delle canzoni">
