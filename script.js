@@ -103,7 +103,7 @@ function switchMode(newMode) {
     'smoke': 'Smoke on the Water',
     'satisfaction': 'Satisfaction'
   };
-  modeStatus.innerHTML = `Modalità: <strong>${labels[newMode]}</strong>`;
+  modeStatus.innerHTML = `<strong>Modalità:</strong> ${labels[newMode]}`;
 }
 
 document.addEventListener("keydown", (e) => {

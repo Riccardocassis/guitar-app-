@@ -13,45 +13,69 @@
       <h1>PLAY THE CHORDS<br />WITH KEYBOARD</h1>
 
       <div class="keyboard-grid">
-        <div>
-          <h2>Normal Strings</h2>
-          <div class="keys">
-            <span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span><span>Y</span>
+        <section>
+          <h2>Corde Vuote</h2>
+          <div class="keys" role="group" aria-label="Tasti per corde vuote">
+            <span role="button" tabindex="0" aria-label="Corda E bassa">Q</span>
+            <span role="button" tabindex="0" aria-label="Corda A">W</span>
+            <span role="button" tabindex="0" aria-label="Corda D">E</span>
+            <span role="button" tabindex="0" aria-label="Corda G">R</span>
+            <span role="button" tabindex="0" aria-label="Corda B">T</span>
+            <span role="button" tabindex="0" aria-label="Corda E alta">Y</span>
           </div>
-          <p>Premi <strong>SPACE</strong> per attivare il metronomo</p>
-          <p><strong>N</strong>: normal strings<br>
-<strong>D</strong>: Smoke on the water<br>
-<strong>S</strong>: Satisfaction</p>
-        </div>
+        </section>
 
-        <div>
-          <h2>Song Mode</h2>
-          <div class="keys">
-            <span>1</span><span>2</span><span>3</span><span>4</span>
+        <section>
+          <h2>Modalità Canzoni</h2>
+          <div class="keys" role="group" aria-label="Tasti per modalità canzoni">
+            <span role="button" tabindex="0" aria-label="Nota 1">1</span>
+            <span role="button" tabindex="0" aria-label="Nota 2">2</span>
+            <span role="button" tabindex="0" aria-label="Nota 3">3</span>
+            <span role="button" tabindex="0" aria-label="Nota 4">4</span>
           </div>
-          <p>Premi <strong>0</strong> per stoppare il suono</p>
-        </div>
+        </section>
       </div>
 
-      <div class="status">
-        <p><strong>Modalità:</strong> <span id="modeStatus">Corde Vuote</span></p>
-        <p><strong>Metronomo:</strong> <span id="metronomeStatus">Spento</span></p>
-      </div>
+      <section class="instructions-box">
+        <h2>Comandi</h2>
+        <div class="instructions-grid">
+          <div class="instruction-item">
+            <strong>SPAZIO</strong> → Attiva/Disattiva metronomo
+          </div>
+          <div class="instruction-item">
+            <strong>0</strong> → Ferma suono
+          </div>
+          <div class="instruction-item">
+            <strong>N</strong> → Corde vuote
+          </div>
+          <div class="instruction-item">
+            <strong>D</strong> → Smoke on the water
+          </div>
+          <div class="instruction-item">
+            <strong>S</strong> → Satisfaction
+          </div>
+        </div>
+      </section>
 
-      <div class="albums">
-        <div class="album">
-          <img src="assets/deep-purple.png" alt="Smoke on the Water" />
-          <div class="tabs">
-            <strong> TABS</strong><br />1‒2‒3<br />1‒2‒4‒3<br />1‒2‒3‒2‒1
+      <section class="status" role="status" aria-live="polite">
+        <p id="modeStatus"><strong>Modalità:</strong> Corde Vuote</p>
+        <p id="metronomeStatus"><strong>Metronomo:</strong> Spento</p>
+      </section>
+
+      <section class="albums" aria-label="Tablature delle canzoni">
+        <article class="album">
+          <img src="assets/deep-purple.png" alt="Copertina album Deep Purple - Smoke on the Water" />
+          <div class="tabs" role="img" aria-label="Tablatura Smoke on the Water">
+            <strong>TABLATURA</strong><br />1‒2‒3<br />1‒2‒4‒3<br />1‒2‒3‒2‒1
           </div>
-        </div>
-        <div class="album">
-          <img src="assets/satisfaction.png" alt="Satisfaction" />
-          <div class="tabs">
-               <strong> TABS</strong><br />1‒1<br />1‒2‒3<br />3‒3‒2‒3‒2‒1
+        </article>
+        <article class="album">
+          <img src="assets/satisfaction.png" alt="Copertina album Rolling Stones - Satisfaction" />
+          <div class="tabs" role="img" aria-label="Tablatura Satisfaction">
+            <strong>TABLATURA</strong><br />1‒1<br />1‒2‒3<br />3‒3‒2‒3‒2‒1
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
 
 <div class="right-panel">
