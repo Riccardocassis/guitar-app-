@@ -1,0 +1,527 @@
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  background: linear-gradient(135deg, #000000 0%, #1a0000 25%, #8b0000 100%);
+  background-attachment: fixed;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(139, 0, 0, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 69, 0, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.game-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.back-button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 107, 107, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 107, 107, 0.3);
+  transform: translateX(-2px);
+}
+
+.mode-indicator {
+  font-weight: 600;
+  color: rgba(255, 107, 107, 0.9);
+}
+
+.metronome-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.metronome-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.metronome-indicator.active {
+  background: #00ff88;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  animation: metronomePulse 0.5s ease-out;
+}
+
+@keyframes metronomePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.metronome-control button {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.metronome-control button:hover {
+  background: rgba(255, 107, 107, 0.2);
+}
+
+/* Container principale */
+.main-container {
+  flex: 1;
+  display: flex;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* Pannello controlli laterale */
+.controls-panel {
+  width: 350px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.4) 0%, 
+    rgba(139, 0, 0, 0.2) 100%);
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(255, 107, 107, 0.2);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+}
+
+.controls-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    rgba(255, 107, 107, 0.8), 
+    rgba(255, 69, 0, 0.6),
+    rgba(255, 107, 107, 0.8));
+  border-radius: 0 2px 2px 0;
+}
+
+/* Controlli principali */
+.primary-controls {
+  flex: 1;
+}
+
+/* Header delle sezioni */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+  position: relative;
+}
+
+.section-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Sezioni dei tasti */
+.key-section h3 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: rgba(255, 107, 107, 0.95);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+
+.song-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.key-button {
+  padding: 1rem 0.8rem;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.12) 0%, 
+    rgba(255, 255, 255, 0.06) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.key-button small {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+
+.key-button:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.25) 0%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+}
+
+.key-button.active {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.6) 0%, 
+    rgba(255, 69, 0, 0.4) 100%);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+}
+
+/* Selezione canzoni */
+.song-selection h3 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: rgba(255, 107, 107, 0.95);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.song-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.song-btn {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.3) 0%, 
+    rgba(255, 107, 107, 0.1) 100%);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.song-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    rgba(255, 107, 107, 0.8), 
+    rgba(255, 69, 0, 0.6));
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.song-btn:hover::before {
+  transform: scaleY(1);
+}
+
+.song-btn img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.song-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
+  display: block;
+}
+
+.song-tabs {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-family: 'Courier New', monospace;
+  color: rgba(255, 107, 107, 0.8);
+  display: block;
+  line-height: 1.3;
+}
+
+.song-btn:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.2) 0%, 
+    rgba(139, 0, 0, 0.3) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.song-btn:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+
+.song-btn.selected {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.3) 0%, 
+    rgba(139, 0, 0, 0.4) 100%);
+  border-color: rgba(255, 107, 107, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+}
+
+.song-btn.selected::before {
+  transform: scaleY(1);
+}
+
+/* Istruzioni */
+.instructions {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.4) 0%, 
+    rgba(255, 107, 107, 0.1) 100%);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  padding: 1.5rem;
+  position: relative;
+  margin-top: auto;
+}
+
+.instructions h4 {
+  margin: 0;
+  color: rgba(255, 107, 107, 0.95);
+  font-size: 1.2rem;
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.instruction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.instruction-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.instruction-list kbd {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.3) 0%, 
+    rgba(139, 0, 0, 0.4) 100%);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: bold;
+  min-width: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Chitarra principale */
+.guitar-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.guitar-container {
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guitar-image-wrapper {
+  position: relative;
+  width: auto;
+  height: 80vh;
+  max-height: 700px;
+  overflow: visible;
+  filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.5));
+}
+
+.guitar {
+  width: auto;
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.string-lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.string-glow {
+  position: absolute;
+  top: 15%;
+  height: 55%;
+  width: 0.8%;
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.9) 0%,
+    rgb(226, 18, 18) 30%,
+    rgb(180, 15, 15) 100%);
+  opacity: 0;
+  transform: translateX(-50%);
+  box-shadow: 
+    0 0 0.8vw 0.3vw rgb(201, 24, 24),
+    0 0 0.5vw 0.2vw rgb(255, 69, 0),
+    0 0 1.5vw 0.8vw rgba(255, 107, 107, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1px;
+  filter: blur(0.2px);
+}
+
+#string-e        { left: 37.8%; }
+#string-a        { left: 40.2%; }
+#string-d        { left: 42.6%; }
+#string-g        { left: 45.1%; }
+#string-b        { left: 47.5%; }
+#string-e-high   { left: 50.0%; }
+
+.string-glow.active {
+  opacity: 1;
+  transform: scaleY(1.1) scaleX(1.2) translateX(-50%);
+  box-shadow: 
+    0 0 1.2vw 0.5vw rgb(201, 24, 24),
+    0 0 0.8vw 0.3vw rgb(255, 69, 0),
+    0 0 2vw 1vw rgba(255, 107, 107, 0.4),
+    0 0 2.5vw 1.2vw rgba(255, 255, 255, 0.15);
+  filter: blur(0.1px);
+  animation: stringPulse 0.5s ease-out;
+}
+
+@keyframes stringPulse {
+  0% { 
+    transform: scaleY(1) scaleX(1) translateX(-50%);
+    opacity: 0;
+  }
+  50% { 
+    transform: scaleY(1.2) scaleX(1.4) translateX(-50%);
+    opacity: 0.7;
+  }
+  100% { 
+    transform: scaleY(1.1) scaleX(1.2) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+  
+  .controls-panel {
+    width: 100%;
+    height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .guitar-main {
+    height: 60vh;
+    padding: 1rem;
+  }
+  
+  .guitar-image-wrapper {
+    height: 50vh;
+  }
+  
+  .key-grid {
+    gap: 0.5rem;
+  }
+  
+  .key-button {
+    padding: 0.8rem 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .game-header {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}

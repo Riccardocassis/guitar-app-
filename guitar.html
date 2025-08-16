@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gibson Chord App - Suona</title>
+  <link rel="stylesheet" href="guitar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="game-wrapper">
+    <!-- Header con modalità e controlli -->
+    <header class="game-header">
+      <div class="back-button" onclick="goBack()">← Torna alla selezione</div>
+      <div class="mode-indicator">
+        <span id="currentMode">Modalità: Corde Vuote</span>
+      </div>
+      <div class="metronome-control">
+        <span>Metronomo: </span>
+        <span id="metronomeStatus">Spento</span>
+        <div id="metronomeIndicator" class="metronome-indicator"></div>
+        <button id="metronomeToggle" onclick="toggleMetronome()">Toggle</button>
+      </div>
+    </header>
+
+    <!-- Container principale -->
+    <div class="main-container">
+      <!-- Pannello laterale con controlli -->
+      <aside class="controls-panel">
+        
+        <!-- Sezione principale controlli -->
+        <div class="primary-controls">
+          <!-- Tasti per corde vuote (visibili quando modalità = corde-vuote) -->
+          <div id="chord-keys" class="key-section">
+            <div class="section-header">
+              <span class="section-icon">🎸</span>
+              <h3>Corde Vuote</h3>
+            </div>
+            <div class="key-grid">
+              <div class="key-button" data-key="q" data-string="e">Q<br><small>Mi basso</small></div>
+              <div class="key-button" data-key="w" data-string="a">W<br><small>La</small></div>
+              <div class="key-button" data-key="e" data-string="d">E<br><small>Re</small></div>
+              <div class="key-button" data-key="r" data-string="g">R<br><small>Sol</small></div>
+              <div class="key-button" data-key="t" data-string="b">T<br><small>Si</small></div>
+              <div class="key-button" data-key="y" data-string="e-high">Y<br><small>Mi alto</small></div>
+            </div>
+          </div>
+
+          <!-- Tasti per modalità canzoni (visibili quando modalità = canzoni) -->
+          <div id="song-keys" class="key-section" style="display: none;">
+            <div class="section-header">
+              <span class="section-icon">🎵</span>
+              <h3>Note delle Canzoni</h3>
+            </div>
+            <div class="key-grid song-grid">
+              <div class="key-button" data-key="1">1</div>
+              <div class="key-button" data-key="2">2</div>
+              <div class="key-button" data-key="3">3</div>
+              <div class="key-button" data-key="4">4</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Istruzioni -->
+        <div class="instructions">
+          <div class="section-header">
+            <span class="section-icon">ℹ️</span>
+            <h4>Comandi</h4>
+          </div>
+          <div class="instruction-list">
+            <div class="instruction-item">
+              <kbd>SPAZIO</kbd>
+              <span>Metronomo on/off</span>
+            </div>
+            <div class="instruction-item">
+              <kbd>0</kbd>
+              <span>Ferma tutti i suoni</span>
+            </div>
+            <div id="mode-instructions">
+              <!-- Istruzioni dinamiche in base alla modalità -->
+            </div>
+          </div>
+        </div>
+        
+      </aside>
+
+      <!-- Chitarra centrale -->
+      <main class="guitar-main">
+        <div class="guitar-container">
+          <div class="guitar-image-wrapper">
+            <img src="assets/guitar.png" alt="Guitar" class="guitar" />
+            <div class="string-lights">
+              <div id="string-e" class="string-glow" data-string="e"></div>
+              <div id="string-a" class="string-glow" data-string="a"></div>
+              <div id="string-d" class="string-glow" data-string="d"></div>
+              <div id="string-g" class="string-glow" data-string="g"></div>
+              <div id="string-b" class="string-glow" data-string="b"></div>
+              <div id="string-e-high" class="string-glow" data-string="e-high"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="guitar.js"></script>
+</body>
+</html>

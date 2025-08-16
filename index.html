@@ -3,109 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gibson Chord App</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Gibson Chord App - Scegli Modalità</title>
+  <link rel="stylesheet" href="intro.css" />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="app-wrapper">
-    <div class="left-panel">
-      <h1>PLAY THE CHORDS<br />WITH KEYBOARD</h1>
-
-      <div class="keyboard-grid">
-        <section>
-          <h2>Corde Vuote</h2>
-          <div class="keys" role="group" aria-label="Tasti per corde vuote">
-            <span role="button" tabindex="0" aria-label="Corda E bassa">Q</span>
-            <span role="button" tabindex="0" aria-label="Corda A">W</span>
-            <span role="button" tabindex="0" aria-label="Corda D">E</span>
-            <span role="button" tabindex="0" aria-label="Corda G">R</span>
-            <span role="button" tabindex="0" aria-label="Corda B">T</span>
-            <span role="button" tabindex="0" aria-label="Corda E alta">Y</span>
-          </div>
-        </section>
-
-        <section>
-          <h2>Modalità Canzoni</h2>
-          <div class="keys" role="group" aria-label="Tasti per modalità canzoni">
-            <span role="button" tabindex="0" aria-label="Nota 1">1</span>
-            <span role="button" tabindex="0" aria-label="Nota 2">2</span>
-            <span role="button" tabindex="0" aria-label="Nota 3">3</span>
-            <span role="button" tabindex="0" aria-label="Nota 4">4</span>
-          </div>
-        </section>
-      </div>
-
-      <section class="control-panel">
-        <h2>Pannello di Controllo</h2>
-        
-        <!-- Status corrente -->
-        <div class="current-status">
-          <div class="status-item">
-            <span class="status-label">Modalità:</span>
-            <span id="modeStatus" class="status-value">Corde Vuote</span>
-          </div>
-          <div class="status-item">
-            <span class="status-label">Metronomo:</span>
-            <span id="metronomeStatus" class="status-value">Spento</span>
-          </div>
-        </div>
-<section class="albums" aria-label="Tablature delle canzoni">
-        <article class="album">
-          <img src="assets/deep-purple.png" alt="Copertina album Deep Purple - Smoke on the Water" />
-          <div class="tabs" role="img" aria-label="Tablatura Smoke on the Water">
-            <strong>TABLATURA</strong><br />1‒2‒3<br />1‒2‒4‒3<br />1‒2‒3‒2‒1
-          </div>
-        </article>
-        <article class="album">
-          <img src="assets/satisfaction.png" alt="Copertina album Rolling Stones - Satisfaction" />
-          <div class="tabs" role="img" aria-label="Tablatura Satisfaction">
-            <strong>TABLATURA</strong><br />1‒1<br />1‒2‒3<br />3‒3‒2‒3‒2‒1
-          </div>
-        </article>
-      </section>
-      <br>
-        <!-- Comandi disponibili -->
-        <div class="commands-section">
-          <h3>Comandi Disponibili</h3>
-          <div class="instructions-grid">
-            <div class="instruction-item">
-              <strong>SPAZIO</strong> → Attiva/Disattiva metronomo
-            </div>
-            <div class="instruction-item">
-              <strong>0</strong> → Ferma suono
-            </div>
-            <div class="instruction-item">
-              <strong>N</strong> → Corde vuote
-            </div>
-            <div class="instruction-item">
-              <strong>D</strong> → Smoke on the water
-            </div>
-            <div class="instruction-item">
-              <strong>S</strong> → Satisfaction
-            </div>
-          </div>
-        </div>
-      </section>
-
+  <div class="intro-wrapper">
+    <div class="intro-container">
+      <h1>GIBSON CHORD APP</h1>
+      <p class="subtitle">Scegli la tua modalità di gioco</p>
       
-    </div>
-
-<div class="right-panel">
-  <div class="guitar-container">
-    <div class="guitar-image-wrapper">
-      <img src="assets/guitar.png" alt="Guitar" class="guitar" />
-      <div class="string-lights">
-        <div id="string-e" class="string-glow"></div>
-        <div id="string-a" class="string-glow"></div>
-        <div id="string-d" class="string-glow"></div>
-        <div id="string-g" class="string-glow"></div>
-        <div id="string-b" class="string-glow"></div>
-        <div id="string-e-high" class="string-glow"></div>
+      <div class="mode-selection">
+        <div class="mode-card" data-mode="corde-vuote" style="--index: 0;">
+          <div class="mode-icon">🎸</div>
+          <h2>Corde Vuote</h2>
+          <p>Suona le singole corde della chitarra liberamente</p>
+          <div class="mode-keys">
+            <span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span><span>Y</span>
+          </div>
+        </div>
+        
+        <div class="mode-card" data-mode="canzoni" data-song="deep-purple" style="--index: 1;">
+          <div class="mode-icon">🎵</div>
+          <h2>Smoke on the Water</h2>
+          <p>Deep Purple - Impara il celebre riff rock</p>
+          <div class="mode-keys">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+          </div>
+          <div class="song-tabs">1‒2‒3 / 1‒2‒4‒3 / 1‒2‒3‒2‒1</div>
+        </div>
+        
+        <div class="mode-card" data-mode="canzoni" data-song="satisfaction" style="--index: 2;">
+          <div class="mode-icon">🎵</div>
+          <h2>Satisfaction</h2>
+          <p>Rolling Stones - Il riff che ha fatto la storia</p>
+          <div class="mode-keys">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+          </div>
+          <div class="song-tabs">1‒1 / 1‒2‒3 / 3‒3‒2‒3‒2‒1</div>
+        </div>
+      </div>
+      
+      <div class="instructions">
+        <p><strong>Istruzioni:</strong> Clicca su una modalità per iniziare a suonare</p>
       </div>
     </div>
   </div>
-</div>
-<script src="script.js"></script>
+  
+  <script>
+    document.querySelectorAll('.mode-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const mode = this.dataset.mode;
+        const song = this.dataset.song;
+        
+        // Passa alla pagina di gioco con la modalità e canzone selezionata
+        if (song) {
+          window.location.href = `guitar.html?mode=${mode}&song=${song}`;
+        } else {
+          window.location.href = `guitar.html?mode=${mode}`;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
