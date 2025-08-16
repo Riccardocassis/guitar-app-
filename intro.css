@@ -7,6 +7,24 @@ body {
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
+  cursor: none;
+}
+
+/* Custom cursor */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.1s ease;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
 }
 
 body::before {
@@ -17,9 +35,9 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 15% 85%, rgba(139, 0, 0, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 85% 15%, rgba(255, 69, 0, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+    radial-gradient(circle at 15% 85%, rgba(100, 100, 100, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 85% 15%, rgba(200, 200, 200, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(150, 150, 150, 0.1) 0%, transparent 70%);
   pointer-events: none;
   z-index: -1;
   animation: backgroundPulse 8s ease-in-out infinite;
@@ -47,7 +65,7 @@ body::before {
   left: 50%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(150, 150, 150, 0.1) 0%, transparent 70%);
   transform: translate(-50%, -50%);
   border-radius: 50%;
   animation: centerGlow 6s ease-in-out infinite;
@@ -80,7 +98,7 @@ h1 {
   font-family: 'Anton', sans-serif;
   font-weight: 400;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #ffffff 0%, #ff6b6b 30%, #ffd700 60%, #ffffff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #cccccc 30%, #888888 60%, #ffffff 100%);
   background-size: 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -89,19 +107,12 @@ h1 {
   text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 2;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  width: 100px;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #ff6b6b, transparent);
-  transform: translateX(-50%);
-  border-radius: 2px;
-  animation: underlineGlow 3s ease-in-out infinite;
+h1:hover {
+  transform: scale(1.02);
+  filter: brightness(1.2);
 }
 
 @keyframes underlineGlow {
@@ -143,22 +154,24 @@ h1::after {
 
 .mode-selection {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
   margin-bottom: 4rem;
   perspective: 1000px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mode-card {
   background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.12) 0%, 
-    rgba(255, 107, 107, 0.08) 50%,
-    rgba(255, 255, 255, 0.06) 100%);
+    rgba(255, 255, 255, 0.15) 0%, 
+    rgba(150, 150, 150, 0.1) 50%,
+    rgba(255, 255, 255, 0.08) 100%);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 107, 107, 0.2);
-  padding: 3rem 2.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(200, 200, 200, 0.2);
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -167,6 +180,9 @@ h1::after {
   box-shadow: 
     0 15px 35px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 400px;
 }
 
 .mode-card::before {
@@ -179,9 +195,9 @@ h1::after {
   background: linear-gradient(
     45deg,
     transparent,
-    rgba(255, 107, 107, 0.4),
-    rgba(255, 215, 0, 0.3),
-    rgba(255, 107, 107, 0.4),
+    rgba(200, 200, 200, 0.4),
+    rgba(100, 100, 100, 0.3),
+    rgba(200, 200, 200, 0.4),
     transparent
   );
   border-radius: 24px;
@@ -203,7 +219,7 @@ h1::after {
   left: 50%;
   width: 0;
   height: 0;
-  background: radial-gradient(circle, rgba(255, 107, 107, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(200, 200, 200, 0.3) 0%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -221,15 +237,15 @@ h1::after {
 
 .mode-card:hover {
   background: linear-gradient(135deg, 
-    rgba(255, 107, 107, 0.25) 0%, 
+    rgba(200, 200, 200, 0.25) 0%, 
     rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 215, 0, 0.1) 100%);
+    rgba(150, 150, 150, 0.1) 100%);
   transform: translateY(-15px) rotateX(5deg) rotateY(5deg) scale(1.03);
   box-shadow: 
     0 35px 60px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(255, 107, 107, 0.3),
+    0 0 30px rgba(200, 200, 200, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 107, 107, 0.4);
+  border: 1px solid rgba(200, 200, 200, 0.4);
 }
 
 .mode-card > * {
@@ -237,39 +253,57 @@ h1::after {
   z-index: 1;
 }
 
-.mode-icon {
-  font-size: 4.5rem;
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
-  animation: iconFloat 3s ease-in-out infinite;
-  transition: all 0.4s ease;
-}
-
-@keyframes iconFloat {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% { 
-    transform: translateY(-8px) rotate(2deg);
-  }
-}
-
 .mode-card:hover .mode-icon {
   transform: translateY(-5px) scale(1.1) rotate(-2deg);
   filter: drop-shadow(0 8px 16px rgba(255, 107, 107, 0.3));
 }
 
+.card-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.mode-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 12px;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(200, 200, 200, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-card:hover .mode-image {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(200, 200, 200, 0.4);
+  border: 2px solid rgba(200, 200, 200, 0.4);
+}
+
+.card-content {
+  padding: 1rem 2rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
 .mode-card h2 {
-  font-size: 2rem;
-  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
+  margin-bottom: 0;
   font-family: 'Anton', sans-serif;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ffd700 50%, #ff6b6b 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #cccccc 50%, #888888 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: titleGlow 3s ease-in-out infinite;
-  text-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
 }
 
 @keyframes titleGlow {
@@ -281,138 +315,6 @@ h1::after {
     background-position: 100% 50%;
     filter: brightness(1.2);
   }
-}
-
-.mode-card p {
-  font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 2rem;
-  line-height: 1.7;
-  font-weight: 400;
-}
-
-.mode-keys {
-  display: flex;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
-.mode-keys::before {
-  content: '🎹';
-  margin-right: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.mode-keys > * {
-  display: inline-block;
-  padding: 0.3rem 0.6rem;
-  background: linear-gradient(145deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: 0.1rem;
-  transition: all 0.3s ease;
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.song-tabs {
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: rgba(255, 215, 0, 0.9);
-  margin-top: 1rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(139, 0, 0, 0.2));
-  border-radius: 10px;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  position: relative;
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 215, 0, 0.2);
-}
-
-.song-tabs::before {
-  content: '🎵';
-  position: absolute;
-  top: -8px;
-  left: 15px;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(139, 0, 0, 0.4));
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.instructions {
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.4) 0%, 
-    rgba(255, 107, 107, 0.15) 50%,
-    rgba(0, 0, 0, 0.4) 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  padding: 2rem;
-  position: relative;
-  backdrop-filter: blur(15px);
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.instructions::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(to bottom, 
-    rgba(255, 107, 107, 1), 
-    rgba(255, 215, 0, 0.8),
-    rgba(255, 107, 107, 1));
-  border-radius: 6px 0 0 6px;
-  animation: instructionGlow 2s ease-in-out infinite;
-}
-
-@keyframes instructionGlow {
-  0%, 100% { 
-    box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
-  }
-  50% { 
-    box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
-  }
-}
-
-.instructions::after {
-  content: '✨';
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 1.5rem;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { 
-    transform: rotate(0deg) scale(1);
-    opacity: 0.7;
-  }
-  50% { 
-    transform: rotate(180deg) scale(1.2);
-    opacity: 1;
-  }
-}
-
-.instructions p {
-  margin: 0;
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: 500;
-  text-align: center;
 }
 
 /* Mobile */
@@ -438,7 +340,19 @@ h1::after {
   }
   
   .mode-card {
-    padding: 2.5rem 2rem;
+    height: 350px;
+  }
+  
+  .card-image {
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  }
+  
+  .mode-image {
+    height: 200px;
+  }
+  
+  .card-content {
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   }
   
   .mode-card:hover {
@@ -446,19 +360,7 @@ h1::after {
   }
   
   .mode-card h2 {
-    font-size: 1.7rem;
-  }
-  
-  .mode-icon {
-    font-size: 3.5rem;
-  }
-  
-  .instructions {
-    padding: 1.5rem;
-  }
-  
-  .instructions p {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -473,19 +375,9 @@ h1::after {
     max-width: 400px;
     justify-self: center;
   }
-}
-
-/* Effetti di glow e animazioni avanzate */
-.mode-keys {
-  animation: keyGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes keyGlow {
-  0% { 
-    filter: brightness(1) drop-shadow(0 0 5px rgba(255, 107, 107, 0.3));
-  }
-  100% { 
-    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 107, 107, 0.6));
+  
+  .mode-card {
+    height: 380px;
   }
 }
 
