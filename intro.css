@@ -6,27 +6,51 @@
 
 body {
   font-family: 'Lato', sans-serif;
-  background: linear-gradient(135deg, #2c0e0e 0%, #4a1212 25%, #6b1717 50%, #2c0e0e 100%);
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(139, 0, 0, 0.8) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(44, 14, 14, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(74, 18, 18, 0.4) 0%, transparent 70%),
+    linear-gradient(135deg, #2c0e0e 0%, #4a1212 25%, #6b1717 50%, #2c0e0e 100%);
+  background-size: 200% 200%, 150% 150%, 300% 300%, 100% 100%;
   background-attachment: fixed;
   color: white;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  animation: rotateBackground 20s linear infinite;
+}
+
+@keyframes rotateBackground {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 50%, 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%, 0% 100%, 0% 50%, 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%, 50% 0%, 0% 0%;
+  }
+  75% {
+    background-position: 0% 100%, 100% 0%, 100% 50%, 0% 0%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%, 0% 0%;
+  }
 }
 
 /* Chitarra in background */
 body::before {
   content: '';
   position: fixed;
-  top: 5%;
-  right: -10%;
-  width: 60%;
-  height: 90%;
+  top: 0%;
+  right: -15%;
+  width: 75%;
+  height: 100%;
   background: url('assets/guitar.png') no-repeat center;
   background-size: contain;
-  opacity: 0.12;
+  opacity: 0.1;
   z-index: -1;
-  transform: rotate(12deg);
+  transform: rotate(10deg);
   pointer-events: none;
 }
 
@@ -77,24 +101,29 @@ h1 {
 }
 
 .mode-card {
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(15px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
   border-radius: 20px;
-  border: 2px solid rgba(139, 69, 19, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   text-align: center;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .mode-card:hover {
-  transform: translateY(-10px) scale(1.05);
-  background: rgba(40, 25, 20, 0.8);
-  border-color: rgba(139, 69, 19, 0.7);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  transform: translateY(-12px) scale(1.02);
+  background: rgba(20, 20, 20, 0.6);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .album-cover {
@@ -103,32 +132,62 @@ h1 {
   margin: 0 auto 1.5rem;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.5),
+    0 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
-  border: 3px solid rgba(139, 69, 19, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .album-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-  filter: brightness(0.9) contrast(1.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(0.95) contrast(1.05) saturate(1.1);
 }
 
 .mode-card:hover .album-cover img {
-  transform: scale(1.1);
-  filter: brightness(1) contrast(1.2);
+  transform: scale(1.05);
+  filter: brightness(1.05) contrast(1.15) saturate(1.2);
 }
 
 .mode-card h2 {
   font-family: 'Anton', sans-serif;
   font-size: clamp(1.2rem, 2.5vw, 1.8rem);
   font-weight: 400;
-  color: #f5f5f5;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   letter-spacing: 0.1em;
   margin: 0;
+  transition: all 0.3s ease;
+}
+
+.mode-card:hover h2 {
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
+}
+
+/* Effetto glow sottile sui box */
+.mode-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.03) 0%, 
+    transparent 50%, 
+    rgba(255, 255, 255, 0.01) 100%);
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.mode-card:hover::after {
+  opacity: 1;
 }
 
 /* Responsive design */
