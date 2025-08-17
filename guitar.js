@@ -72,6 +72,12 @@ function setMode(mode) {
         document.getElementById('chord-keys').style.display = 'none';
         document.getElementById('song-keys').style.display = 'block';
         
+        // Assicurati che il tasto 4 sia visibile di default in modalità canzoni
+        const key4Button = document.getElementById('key-4-button');
+        if (key4Button) {
+            key4Button.style.display = 'flex';
+        }
+        
         updateInstructions([
             '<div class="instruction-item"><kbd>1 2 3 4</kbd><span>Note della canzone</span></div>'
         ]);
@@ -331,7 +337,11 @@ function handleChordKeyPress(key) {
 function handleSongKeyPress(key, buttonElement = null) {
     console.log('Tasto canzone premuto:', key, 'Canzone attuale:', currentSong);
     
-    const validKeys = ['1', '2', '3', '4'];
+    // Tasti validi dipendono dalla canzone
+    let validKeys = ['1', '2', '3', '4'];
+    if (currentSong === 'satisfaction') {
+        validKeys = ['1', '2', '3']; // Solo 3 tasti per Satisfaction
+    }
     
     if (validKeys.includes(key)) {
         // FERMA la nota precedente per comportamento chitarra reale
@@ -354,21 +364,21 @@ function handleSongKeyPress(key, buttonElement = null) {
         let soundKey = null;
         
         if (currentSong === 'deep-purple') {
-            // Smoke on the Water - usa file specifici
+            // Smoke on the Water - usa i file numerici corretti
             const deepPurpleMap = {
-                '1': 't1',  // Prima nota del riff
-                '2': 't2',  // Seconda nota del riff  
-                '3': 't3',  // Terza nota del riff
-                '4': 't1'   // Ripete la prima nota (o usa un'altra se disponibile)
+                '1': '1',   // Prima nota del riff (1.mp3)
+                '2': '2',   // Seconda nota del riff (2.mp3)
+                '3': '3',   // Terza nota del riff (3.mp3)
+                '4': '4'    // Quarta nota del riff (4.mp3)
             };
             soundKey = deepPurpleMap[key];
         } else if (currentSong === 'satisfaction') {
-            // Satisfaction - usa i file numerici di base o specifici
+            // Satisfaction - usa i file specifici t1, t2, t3
             const satisfactionMap = {
-                '1': '1',   // Prima nota del riff
-                '2': '2',   // Seconda nota del riff
-                '3': '3',   // Terza nota del riff  
-                '4': '4'    // Quarta nota del riff
+                '1': 't1',  // Prima nota del riff (t1.mp3)
+                '2': 't2',  // Seconda nota del riff (t2.mp3)
+                '3': 't3'   // Terza nota del riff (t3.mp3)
+                // Tasto 4 rimosso per questa canzone
             };
             soundKey = satisfactionMap[key];
         } else {
@@ -418,8 +428,8 @@ function illuminateStringsForSong(key, song) {
         'satisfaction': {
             '1': ['string-a'],      // La (5a corda)
             '2': ['string-d'],      // Re (4a corda)
-            '3': ['string-g'],      // Sol (3a corda)
-            '4': ['string-b']       // Si (2a corda)
+            '3': ['string-g']       // Sol (3a corda)
+            // Tasto 4 rimosso per questa canzone
         }
     };
     
@@ -451,6 +461,16 @@ function selectSong(songId) {
     const selectedBtn = document.querySelector(`[data-song="${songId}"]`);
     if (selectedBtn) {
         selectedBtn.classList.add('selected');
+    }
+    
+    // Gestisci la visibilità del tasto 4 in base alla canzone
+    const key4Button = document.getElementById('key-4-button');
+    if (key4Button) {
+        if (songId === 'satisfaction') {
+            key4Button.style.display = 'none'; // Nascondi il tasto 4 per Satisfaction
+        } else {
+            key4Button.style.display = 'flex'; // Mostra il tasto 4 per altre canzoni
+        }
     }
     
     // Aggiorna l'indicatore della modalità
