@@ -4,6 +4,7 @@ let currentSong = null;
 let metronomeActive = false;
 let metronomeInterval = null;
 let metronomeSource = null; // Source del metronomo per controllarlo
+let metronomeSourceList = []; // Lista di tutti i source del metronomo per pulizia sicura
 let activeSources = []; // Array per tracciare i suoni attivi
 let lastKeyTime = {}; // Prevenire spam dei tasti
 let audioContextInitialized = false;
@@ -485,6 +486,14 @@ function selectSong(songId) {
 
 function toggleMetronome() {
     console.log('Toggle metronomo, stato attuale:', metronomeActive);
+    
+    // Previeni chiamate multiple rapide
+    if (window.metronomeToggling) {
+        console.log('Toggle metronomo già in corso, ignorato');
+        return;
+    }
+    window.metronomeToggling = true;
+    
     metronomeActive = !metronomeActive;
     
     const statusElement = document.getElementById('metronomeStatus');
@@ -501,85 +510,137 @@ function toggleMetronome() {
         indicatorElement.classList.remove('active');
         stopMetronome();
     }
+    
+    // Rilascia il lock dopo un breve delay
+    setTimeout(() => {
+        window.metronomeToggling = false;
+    }, 100);
 }
 
 function startMetronome() {
-    // Ferma il metronomo precedente se attivo
+    // PULIZIA COMPLETA: Ferma TUTTO quello che riguarda il metronomo
     if (metronomeInterval) {
         clearInterval(metronomeInterval);
         metronomeInterval = null;
     }
     
-    // Ferma il source del metronomo precedente
-    if (metronomeSource) {
+    // Ferma e pulisci TUTTI i source del metronomo precedenti
+    metronomeSourceList.forEach(source => {
         try {
-            metronomeSource.stop();
+            source.stop();
         } catch (e) {
             // Ignora errori se già terminato
         }
-        metronomeSource = null;
-    }
+    });
+    metronomeSourceList = [];
+    metronomeSource = null;
     
     const indicatorElement = document.getElementById('metronomeIndicator');
     
     const playMetronomeTick = () => {
-        if (sounds['metronome'] && metronomeActive) {
-            // Ferma il tick precedente se ancora suona
-            if (metronomeSource) {
-                try {
-                    metronomeSource.stop();
-                } catch (e) {}
+        // Controllo di sicurezza: se il metronomo è stato disattivato, non suonare
+        if (!metronomeActive || !sounds['metronome']) {
+            return;
+        }
+        
+        // FERMA il source precedente prima di crearne uno nuovo
+        if (metronomeSource) {
+            try {
+                metronomeSource.stop();
+            } catch (e) {
+                // Ignora errori se già terminato
             }
-            
+            // Rimuovi dalla lista
+            const index = metronomeSourceList.indexOf(metronomeSource);
+            if (index > -1) {
+                metronomeSourceList.splice(index, 1);
+            }
+            metronomeSource = null;
+        }
+        
+        try {
             // Crea nuovo source per il metronomo
-            metronomeSource = audioContext.createBufferSource();
-            metronomeSource.buffer = sounds['metronome'];
-            metronomeSource.connect(audioContext.destination);
-            metronomeSource.start();
+            const newSource = audioContext.createBufferSource();
+            newSource.buffer = sounds['metronome'];
+            newSource.connect(audioContext.destination);
             
-            // Clean up quando finisce
-            metronomeSource.onended = () => {
-                metronomeSource = null;
+            // Imposta come source corrente
+            metronomeSource = newSource;
+            metronomeSourceList.push(newSource);
+            
+            // Clean up automatico quando finisce NATURALMENTE
+            newSource.onended = () => {
+                const index = metronomeSourceList.indexOf(newSource);
+                if (index > -1) {
+                    metronomeSourceList.splice(index, 1);
+                }
+                if (metronomeSource === newSource) {
+                    metronomeSource = null;
+                }
             };
             
-            // Anima l'indicatore
-            indicatorElement.classList.remove('active');
-            setTimeout(() => {
-                if (metronomeActive) {
-                    indicatorElement.classList.add('active');
-                }
-            }, 10);
+            newSource.start();
+            console.log('Tick metronomo riprodotto');
+            
+            // Anima l'indicatore solo se il metronomo è ancora attivo
+            if (metronomeActive && indicatorElement) {
+                indicatorElement.classList.remove('active');
+                // Usa requestAnimationFrame per animazione più fluida
+                requestAnimationFrame(() => {
+                    if (metronomeActive && indicatorElement) {
+                        indicatorElement.classList.add('active');
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Errore nella riproduzione del metronomo:', error);
         }
     };
     
     // Primo tick immediato
     playMetronomeTick();
     
-    // Tick ogni 500ms (120 BPM)
-    metronomeInterval = setInterval(playMetronomeTick, 500);
+    // Tick ogni 500ms (120 BPM) - SOLO se il metronomo è ancora attivo
+    metronomeInterval = setInterval(() => {
+        if (metronomeActive) {
+            playMetronomeTick();
+        } else {
+            // Sicurezza: se per qualche motivo il metronomo non è più attivo, ferma l'interval
+            clearInterval(metronomeInterval);
+            metronomeInterval = null;
+        }
+    }, 500);
 }
 
 function stopMetronome() {
+    console.log('Fermando metronomo...');
+    
+    // Ferma l'interval IMMEDIATAMENTE
     if (metronomeInterval) {
         clearInterval(metronomeInterval);
         metronomeInterval = null;
+        console.log('Interval metronomo fermato');
     }
     
-    // Ferma il source del metronome se attivo
-    if (metronomeSource) {
+    // Ferma e pulisci TUTTI i source del metronomo
+    metronomeSourceList.forEach((source, index) => {
         try {
-            metronomeSource.stop();
+            source.stop();
+            console.log(`Source metronomo ${index} fermato`);
         } catch (e) {
             // Ignora errori se già terminato
         }
-        metronomeSource = null;
-    }
+    });
+    metronomeSourceList = [];
+    metronomeSource = null;
     
     // Rimuovi l'animazione dall'indicatore
     const indicatorElement = document.getElementById('metronomeIndicator');
     if (indicatorElement) {
         indicatorElement.classList.remove('active');
     }
+    
+    console.log('Metronomo completamente fermato');
 }
 
 function stopAllSounds() {
@@ -603,15 +664,16 @@ function stopAllSounds() {
         currentSongSource = null;
     }
     
-    // Ferma anche il metronomo se attivo
-    if (metronomeSource) {
+    // Ferma TUTTI i source del metronomo
+    metronomeSourceList.forEach(source => {
         try {
-            metronomeSource.stop();
+            source.stop();
         } catch (e) {
             // Ignora errori se già terminato
         }
-        metronomeSource = null;
-    }
+    });
+    metronomeSourceList = [];
+    metronomeSource = null;
     
     // Spegni tutte le corde illuminate
     document.querySelectorAll('.string-glow').forEach(string => {
