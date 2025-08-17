@@ -290,21 +290,15 @@ function handleKeyPress(event) {
 function handleKeyRelease(event) {
     const key = event.key.toLowerCase();
     
-    // Rimuovi highlighting dai tasti
+    // Rimuovi highlighting dai tasti (solo per evidenziazione temporanea)
     document.querySelectorAll('.key-button').forEach(button => {
         if (button.dataset.key === key) {
             button.classList.remove('active');
         }
     });
     
-    // Spegni le corde illuminate solo per le corde vuote
-    if (currentMode === 'corde-vuote') {
-        document.querySelectorAll('.string-glow').forEach(string => {
-            string.classList.remove('active');
-        });
-    }
-    // Per le canzoni NON fermiamo la nota al rilascio del tasto
-    // La nota continua a suonare finché non viene premuto un altro tasto
+    // Non gestiamo più lo spegnimento delle corde al rilascio dei tasti
+    // Sia per le corde vuote che per le canzoni, le corde si spengono quando il suono finisce
 }
 
 function handleChordKeyPress(key) {
@@ -320,22 +314,63 @@ function handleChordKeyPress(key) {
     
     if (keyMap[key]) {
         console.log('Mapping trovato per tasto:', key, keyMap[key]);
-        playSound(keyMap[key].sound);
         
-        // Illumina la corda
+        // FERMA tutti i suoni precedenti per evitare sovrapposizioni (come le canzoni)
+        activeSources.forEach(source => {
+            try {
+                source.stop();
+                console.log('Suono corda precedente fermato per nuova corda');
+            } catch (e) {
+                // Ignora errori se già terminato
+            }
+        });
+        activeSources = [];
+        
+        // Spegni tutte le corde prima della nuova
+        document.querySelectorAll('.string-glow').forEach(string => {
+            string.classList.remove('active');
+        });
+        
+        // Rimuovi evidenziazione da tutti i tasti prima del nuovo
+        document.querySelectorAll('.key-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Suona la nuova corda
+        const newSource = playSound(keyMap[key].sound);
+        
+        // Illumina la corda corrispondente
         const stringElement = document.getElementById(keyMap[key].string);
         if (stringElement) {
             stringElement.classList.add('active');
             console.log('Corda illuminata:', keyMap[key].string);
+            
+            // Sincronizza l'illuminazione con la durata del suono
+            if (newSource) {
+                newSource.onended = () => {
+                    stringElement.classList.remove('active');
+                    console.log('Corda spenta alla fine del suono:', keyMap[key].string);
+                    
+                    // Rimuovi dalla lista dei source attivi
+                    const index = activeSources.indexOf(newSource);
+                    if (index > -1) {
+                        activeSources.splice(index, 1);
+                    }
+                };
+            }
         } else {
             console.error('Elemento corda non trovato:', keyMap[key].string);
         }
         
-        // Evidenzia il tasto
+        // Evidenzia il tasto temporaneamente
         document.querySelectorAll('.key-button').forEach(button => {
             if (button.dataset.key === key) {
                 button.classList.add('active');
                 console.log('Tasto evidenziato:', key);
+                // Rimuovi l'evidenziazione dopo un breve tempo
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 200);
             }
         });
     } else {
