@@ -200,16 +200,17 @@ function playSongSound(soundKey) {
         source.buffer = sounds[soundKey];
         source.connect(audioContext.destination);
         
-        // Imposta il loop per far continuare la nota
-        source.loop = true;
+        // RIMUOVIAMO il loop - come una chitarra reale, la nota suona una volta sola
+        // source.loop = true; // <-- RIMOSSO
         source.start();
         
-        console.log(`✓ Suono canzone riprodotto in loop: ${soundKey}`);
+        console.log(`✓ Suono canzone riprodotto: ${soundKey}`);
         
-        // Gestisci la fine del suono (solo se fermato manualmente)
+        // Gestisci la fine del suono
         source.onended = () => {
             if (currentSongSource === source) {
                 currentSongSource = null;
+                console.log(`Suono ${soundKey} terminato naturalmente`);
             }
         };
         
@@ -345,16 +346,8 @@ function handleSongKeyPress(key, buttonElement = null) {
     }
     
     if (validKeys.includes(key)) {
-        // FERMA la nota precedente per comportamento chitarra reale
-        if (currentSongSource) {
-            try {
-                currentSongSource.stop();
-                console.log('Nota precedente interrotta');
-            } catch (e) {
-                // Ignora errori se già terminato
-            }
-            currentSongSource = null;
-        }
+        // Comportamento chitarra reale: ogni nota suona indipendentemente
+        // Non fermiamo le note precedenti - lasciano che finiscano naturalmente
         
         // Rimuovi evidenziazione da tutti i tasti delle canzoni prima di evidenziare il nuovo
         document.querySelectorAll('#song-keys .key-button').forEach(button => {
@@ -389,17 +382,27 @@ function handleSongKeyPress(key, buttonElement = null) {
         
         if (soundKey) {
             console.log(`Riproduzione suono: ${soundKey} per tasto ${key} nella canzone ${currentSong}`);
-            currentSongSource = playSongSound(soundKey);
+            // Ogni pressione del tasto crea un nuovo suono indipendente
+            const newSongSource = playSongSound(soundKey);
+            // Non manteniamo più currentSongSource per una sola nota, 
+            // lasciamo che ogni nota suoni liberamente
         }
         
-        // Evidenzia SOLO il tasto corrente
+        // Evidenzia SOLO il tasto corrente temporaneamente
         if (buttonElement) {
             buttonElement.classList.add('active');
+            // Rimuovi l'evidenziazione dopo un breve tempo
+            setTimeout(() => {
+                buttonElement.classList.remove('active');
+            }, 200);
         } else {
-            // Trova il bottone corrispondente e evidenzialo
+            // Trova il bottone corrispondente e evidenzialo temporaneamente
             document.querySelectorAll('#song-keys .key-button').forEach(button => {
                 if (button.dataset.key === key) {
                     button.classList.add('active');
+                    setTimeout(() => {
+                        button.classList.remove('active');
+                    }, 200);
                 }
             });
         }
@@ -435,10 +438,10 @@ function illuminateStringsForSong(key, song) {
     };
     
     if (songMappings[song] && songMappings[song][key]) {
-        // Spegni tutte le corde prima di illuminare quella nuova
-        document.querySelectorAll('.string-glow').forEach(string => {
-            string.classList.remove('active');
-        });
+        // NON spegniamo tutte le corde - lasciamo che si sovrappongano come in una chitarra reale
+        // document.querySelectorAll('.string-glow').forEach(string => {
+        //     string.classList.remove('active');
+        // });
         
         // Illumina le corde appropriate per la nota corrente
         songMappings[song][key].forEach(stringId => {
@@ -446,6 +449,13 @@ function illuminateStringsForSong(key, song) {
             if (stringElement) {
                 stringElement.classList.add('active');
                 console.log('Corda illuminata per canzone:', stringId);
+                
+                // La corda si spegne dopo un tempo realistico (circa 3-4 secondi)
+                // simula il sustain naturale di una chitarra elettrica
+                setTimeout(() => {
+                    stringElement.classList.remove('active');
+                    console.log('Corda spenta dopo sustain:', stringId);
+                }, 3500); // 3.5 secondi di sustain
             }
         });
     }
@@ -654,15 +664,8 @@ function stopAllSounds() {
     });
     activeSources = [];
     
-    // Ferma il suono attuale della canzone
-    if (currentSongSource) {
-        try {
-            currentSongSource.stop();
-        } catch (e) {
-            // Ignora errori se già terminato
-        }
-        currentSongSource = null;
-    }
+    // Non gestiamo più un singolo currentSongSource poiché ogni nota suona indipendentemente
+    // I suoni delle canzoni terminano naturalmente
     
     // Ferma TUTTI i source del metronomo
     metronomeSourceList.forEach(source => {
