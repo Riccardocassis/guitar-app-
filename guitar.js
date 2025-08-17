@@ -6,29 +6,50 @@ let metronomeInterval = null;
 let metronomeSource = null; // Source del metronomo per controllarlo
 let activeSources = []; // Array per tracciare i suoni attivi
 let lastKeyTime = {}; // Prevenire spam dei tasti
+let audioContextInitialized = false;
+let currentSongSource = null; // Source attuale per le canzoni (una nota alla volta)
 
 // Audio context e suoni
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioContext;
 const sounds = {};
 
 // Inizializzazione
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM caricato, inizializzazione app...');
     initializeApp();
-    loadSounds();
     setupEventListeners();
+    initializeAudioContext();
 });
 
+function initializeAudioContext() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        console.log('Audio context creato:', audioContext.state);
+        loadSounds();
+    } catch (error) {
+        console.error('Errore nella creazione dell\'audio context:', error);
+    }
+}
+
 function initializeApp() {
+    console.log('Inizializzazione app...');
     // Ottieni la modalità e canzone dai parametri URL
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode') || 'corde-vuote';
     const song = urlParams.get('song');
+    
+    console.log('Modalità:', mode, 'Canzone:', song);
     
     setMode(mode);
     
     // Se c'è una canzone preselezionata, impostala
     if (song && mode === 'canzoni') {
         selectSong(song);
+        console.log('Canzone selezionata:', song);
+    } else if (mode === 'canzoni' && !song) {
+        // Se siamo in modalità canzoni senza canzone specifica, imposta una di default
+        console.log('Modalità canzoni senza canzone specificata, imposto default');
+        // Potresti voler impostare una canzone di default qui
     }
 }
 
@@ -42,7 +63,6 @@ function setMode(mode) {
         modeIndicator.textContent = 'Modalità: Corde Vuote';
         document.getElementById('chord-keys').style.display = 'block';
         document.getElementById('song-keys').style.display = 'none';
-        document.getElementById('song-selection').style.display = 'none';
         
         updateInstructions([
             '<div class="instruction-item"><kbd>Q W E R T Y</kbd><span>Suona le corde</span></div>'
@@ -64,6 +84,7 @@ function updateInstructions(instructions) {
 }
 
 async function loadSounds() {
+    console.log('Caricamento suoni...');
     const soundFiles = {
         'E_low': 'assets/E_low.mp3',
         'A': 'assets/A.mp3',
@@ -83,18 +104,39 @@ async function loadSounds() {
 
     for (const [key, file] of Object.entries(soundFiles)) {
         try {
+            console.log(`Caricamento ${key} da ${file}...`);
             const response = await fetch(file);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
             const arrayBuffer = await response.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             sounds[key] = audioBuffer;
+            console.log(`✓ ${key} caricato con successo`);
         } catch (error) {
-            console.error(`Errore nel caricamento del suono ${key}:`, error);
+            console.error(`❌ Errore nel caricamento del suono ${key}:`, error);
         }
     }
+    console.log('Suoni caricati:', Object.keys(sounds));
 }
 
 function playSound(soundKey) {
-    if (!sounds[soundKey]) return;
+    console.log('Tentativo di riproduzione suono:', soundKey);
+    
+    if (!audioContext) {
+        console.error('Audio context non inizializzato');
+        return;
+    }
+    
+    if (audioContext.state === 'suspended') {
+        console.log('Audio context sospeso, tentativo di riattivazione...');
+        audioContext.resume();
+    }
+    
+    if (!sounds[soundKey]) {
+        console.error('Suono non trovato:', soundKey);
+        return;
+    }
     
     // Debounce per prevenire spam (50ms minimo tra suoni dello stesso tipo)
     const now = Date.now();
@@ -103,23 +145,71 @@ function playSound(soundKey) {
     }
     lastKeyTime[soundKey] = now;
     
-    const source = audioContext.createBufferSource();
-    source.buffer = sounds[soundKey];
-    source.connect(audioContext.destination);
-    source.start();
+    try {
+        const source = audioContext.createBufferSource();
+        source.buffer = sounds[soundKey];
+        source.connect(audioContext.destination);
+        source.start();
+        
+        console.log(`✓ Suono riprodotto: ${soundKey}`);
+        
+        // Aggiungi alla lista dei suoni attivi
+        activeSources.push(source);
+        
+        // Rimuovi dalla lista quando il suono finisce
+        source.onended = () => {
+            const index = activeSources.indexOf(source);
+            if (index > -1) {
+                activeSources.splice(index, 1);
+            }
+        };
+        
+        return source;
+    } catch (error) {
+        console.error('Errore nella riproduzione del suono:', error);
+    }
+}
+
+function playSongSound(soundKey) {
+    console.log('Tentativo di riproduzione suono canzone:', soundKey);
     
-    // Aggiungi alla lista dei suoni attivi
-    activeSources.push(source);
+    if (!audioContext) {
+        console.error('Audio context non inizializzato');
+        return;
+    }
     
-    // Rimuovi dalla lista quando il suono finisce
-    source.onended = () => {
-        const index = activeSources.indexOf(source);
-        if (index > -1) {
-            activeSources.splice(index, 1);
-        }
-    };
+    if (audioContext.state === 'suspended') {
+        console.log('Audio context sospeso, tentativo di riattivazione...');
+        audioContext.resume();
+    }
     
-    return source;
+    if (!sounds[soundKey]) {
+        console.error('Suono canzone non trovato:', soundKey);
+        return;
+    }
+    
+    try {
+        const source = audioContext.createBufferSource();
+        source.buffer = sounds[soundKey];
+        source.connect(audioContext.destination);
+        
+        // Imposta il loop per far continuare la nota
+        source.loop = true;
+        source.start();
+        
+        console.log(`✓ Suono canzone riprodotto in loop: ${soundKey}`);
+        
+        // Gestisci la fine del suono (solo se fermato manualmente)
+        source.onended = () => {
+            if (currentSongSource === source) {
+                currentSongSource = null;
+            }
+        };
+        
+        return source;
+    } catch (error) {
+        console.error('Errore nella riproduzione del suono canzone:', error);
+    }
 }
 
 function setupEventListeners() {
@@ -192,15 +282,18 @@ function handleKeyRelease(event) {
         }
     });
     
-    // Spegni le corde illuminate
+    // Spegni le corde illuminate solo per le corde vuote
     if (currentMode === 'corde-vuote') {
         document.querySelectorAll('.string-glow').forEach(string => {
             string.classList.remove('active');
         });
     }
+    // Per le canzoni NON fermiamo la nota al rilascio del tasto
+    // La nota continua a suonare finché non viene premuto un altro tasto
 }
 
 function handleChordKeyPress(key) {
+    console.log('Tasto premuto:', key);
     const keyMap = {
         'q': { sound: 'E_low', string: 'string-e' },
         'w': { sound: 'A', string: 'string-a' },
@@ -211,36 +304,89 @@ function handleChordKeyPress(key) {
     };
     
     if (keyMap[key]) {
+        console.log('Mapping trovato per tasto:', key, keyMap[key]);
         playSound(keyMap[key].sound);
         
         // Illumina la corda
         const stringElement = document.getElementById(keyMap[key].string);
         if (stringElement) {
             stringElement.classList.add('active');
+            console.log('Corda illuminata:', keyMap[key].string);
+        } else {
+            console.error('Elemento corda non trovato:', keyMap[key].string);
         }
         
         // Evidenzia il tasto
         document.querySelectorAll('.key-button').forEach(button => {
             if (button.dataset.key === key) {
                 button.classList.add('active');
+                console.log('Tasto evidenziato:', key);
             }
         });
+    } else {
+        console.log('Nessun mapping trovato per tasto:', key);
     }
 }
 
 function handleSongKeyPress(key, buttonElement = null) {
-    // Usa direttamente i numeri come chiavi per i suoni
+    console.log('Tasto canzone premuto:', key, 'Canzone attuale:', currentSong);
+    
     const validKeys = ['1', '2', '3', '4'];
     
     if (validKeys.includes(key)) {
-        playSound(key); // Suona direttamente usando il numero come chiave
+        // FERMA la nota precedente per comportamento chitarra reale
+        if (currentSongSource) {
+            try {
+                currentSongSource.stop();
+                console.log('Nota precedente interrotta');
+            } catch (e) {
+                // Ignora errori se già terminato
+            }
+            currentSongSource = null;
+        }
         
-        // Evidenzia il tasto se fornito
+        // Rimuovi evidenziazione da tutti i tasti delle canzoni prima di evidenziare il nuovo
+        document.querySelectorAll('#song-keys .key-button').forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        // Mappa i tasti ai suoni specifici per ogni canzone
+        let soundKey = null;
+        
+        if (currentSong === 'deep-purple') {
+            // Smoke on the Water - usa file specifici
+            const deepPurpleMap = {
+                '1': 't1',  // Prima nota del riff
+                '2': 't2',  // Seconda nota del riff  
+                '3': 't3',  // Terza nota del riff
+                '4': 't1'   // Ripete la prima nota (o usa un'altra se disponibile)
+            };
+            soundKey = deepPurpleMap[key];
+        } else if (currentSong === 'satisfaction') {
+            // Satisfaction - usa i file numerici di base o specifici
+            const satisfactionMap = {
+                '1': '1',   // Prima nota del riff
+                '2': '2',   // Seconda nota del riff
+                '3': '3',   // Terza nota del riff  
+                '4': '4'    // Quarta nota del riff
+            };
+            soundKey = satisfactionMap[key];
+        } else {
+            // Default: usa i file numerici
+            soundKey = key;
+        }
+        
+        if (soundKey) {
+            console.log(`Riproduzione suono: ${soundKey} per tasto ${key} nella canzone ${currentSong}`);
+            currentSongSource = playSongSound(soundKey);
+        }
+        
+        // Evidenzia SOLO il tasto corrente
         if (buttonElement) {
             buttonElement.classList.add('active');
         } else {
-            // Trova il bottone corrispondente
-            document.querySelectorAll('.key-button').forEach(button => {
+            // Trova il bottone corrispondente e evidenzialo
+            document.querySelectorAll('#song-keys .key-button').forEach(button => {
                 if (button.dataset.key === key) {
                     button.classList.add('active');
                 }
@@ -278,16 +424,17 @@ function illuminateStringsForSong(key, song) {
     };
     
     if (songMappings[song] && songMappings[song][key]) {
-        // Spegni tutte le corde
+        // Spegni tutte le corde prima di illuminare quella nuova
         document.querySelectorAll('.string-glow').forEach(string => {
             string.classList.remove('active');
         });
         
-        // Illumina le corde appropriate
+        // Illumina le corde appropriate per la nota corrente
         songMappings[song][key].forEach(stringId => {
             const stringElement = document.getElementById(stringId);
             if (stringElement) {
                 stringElement.classList.add('active');
+                console.log('Corda illuminata per canzone:', stringId);
             }
         });
     }
@@ -317,16 +464,19 @@ function selectSong(songId) {
 }
 
 function toggleMetronome() {
+    console.log('Toggle metronomo, stato attuale:', metronomeActive);
     metronomeActive = !metronomeActive;
     
     const statusElement = document.getElementById('metronomeStatus');
     const indicatorElement = document.getElementById('metronomeIndicator');
     
     if (metronomeActive) {
+        console.log('Avvio metronomo...');
         statusElement.textContent = 'Acceso';
         indicatorElement.classList.add('active');
         startMetronome();
     } else {
+        console.log('Arresto metronomo...');
         statusElement.textContent = 'Spento';
         indicatorElement.classList.remove('active');
         stopMetronome();
@@ -423,6 +573,16 @@ function stopAllSounds() {
     });
     activeSources = [];
     
+    // Ferma il suono attuale della canzone
+    if (currentSongSource) {
+        try {
+            currentSongSource.stop();
+        } catch (e) {
+            // Ignora errori se già terminato
+        }
+        currentSongSource = null;
+    }
+    
     // Ferma anche il metronomo se attivo
     if (metronomeSource) {
         try {
@@ -455,10 +615,26 @@ function goBack() {
 
 // Gestione dell'audio context (necessario per i browser moderni)
 document.addEventListener('click', function() {
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
+    console.log('Click rilevato, stato audio context:', audioContext?.state);
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            console.log('Audio context riattivato');
+        });
     }
 });
+
+// Gestione iniziale dell'audio context
+document.addEventListener('click', function initAudio() {
+    if (!audioContextInitialized) {
+        console.log('Primo click - inizializzazione audio context');
+        audioContextInitialized = true;
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        // Rimuovi questo listener dopo il primo click
+        document.removeEventListener('click', initAudio);
+    }
+}, { once: true });
 
 // Prevenzione del comportamento di default per alcuni tasti
 document.addEventListener('keydown', function(event) {
