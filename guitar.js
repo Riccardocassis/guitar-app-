@@ -148,12 +148,15 @@ function playSound(soundKey) {
         return;
     }
     
-    // Debounce per prevenire spam (50ms minimo tra suoni dello stesso tipo)
+    // Rimuovo il debounce per permettere la ripetizione immediata dello stesso suono
+    // Il controllo delle sovrapposizioni viene gestito a livello superiore
+    /*
     const now = Date.now();
     if (lastKeyTime[soundKey] && (now - lastKeyTime[soundKey] < 50)) {
         return;
     }
     lastKeyTime[soundKey] = now;
+    */
     
     try {
         const source = audioContext.createBufferSource();
@@ -382,9 +385,11 @@ function handleChordKeyPress(key) {
     if (keyMap[key]) {
         console.log('Mapping trovato per tasto:', key, keyMap[key]);
         
-        // FERMA tutti i suoni precedenti per evitare sovrapposizioni (come le canzoni)
+        // FERMA tutti i suoni precedenti per evitare sovrapposizioni
         activeSources.forEach(source => {
             try {
+                // Rimuovi il callback onended prima di fermare per evitare interferenze
+                source.onended = null;
                 source.stop();
                 console.log('Suono corda precedente fermato per nuova corda');
             } catch (e) {
@@ -406,9 +411,10 @@ function handleChordKeyPress(key) {
         // Suona la nuova corda
         const newSource = playSound(keyMap[key].sound);
         
-        // Illumina la corda corrispondente
+        // Illumina SEMPRE la corda corrispondente quando viene premuto il tasto
         const stringElement = document.getElementById(keyMap[key].string);
         if (stringElement) {
+            // Illumina immediatamente la corda
             stringElement.classList.add('active');
             console.log('Corda illuminata:', keyMap[key].string);
             
@@ -424,6 +430,12 @@ function handleChordKeyPress(key) {
                         activeSources.splice(index, 1);
                     }
                 };
+            } else {
+                // Fallback: se non c'è un source audio, spegni la corda dopo un tempo ragionevole
+                setTimeout(() => {
+                    stringElement.classList.remove('active');
+                    console.log('Corda spenta dopo timeout fallback:', keyMap[key].string);
+                }, 3000);
             }
         } else {
             console.error('Elemento corda non trovato:', keyMap[key].string);
@@ -458,6 +470,8 @@ function handleSongKeyPress(key, buttonElement = null) {
         // FERMA tutte le note precedenti per evitare sovrapposizioni
         activeSongSources.forEach(source => {
             try {
+                // Rimuovi il callback onended prima di fermare per evitare interferenze
+                source.onended = null;
                 source.stop();
                 console.log('Nota precedente fermata per nuova nota');
             } catch (e) {
@@ -561,6 +575,7 @@ function illuminateStringsForSong(key, song, soundSource = null) {
         songMappings[song][key].forEach(stringId => {
             const stringElement = document.getElementById(stringId);
             if (stringElement) {
+                // Illumina immediatamente la corda
                 stringElement.classList.add('active');
                 console.log('Corda illuminata per canzone:', stringId);
                 
