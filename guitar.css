@@ -636,10 +636,10 @@ body::before {
 /* Posizionamento delle corde - Allineate con l'immagine della chitarra */
 #string-e        { left: 38.5%; }  /* E basso - più a destra */
 #string-a        { left: 40.8%; }  /* A */
-#string-d        { left: 43.1%; }  /* D */
-#string-g        { left: 45.4%; }  /* G */
-#string-b        { left: 47.7%; }  /* B */
-#string-e-high   { left: 50.0%; } /* E alto */
+#string-d        { left: 43.3%; }  /* D */
+#string-g        { left: 47.3%; }  /* G */
+#string-b        { left: 49.7%; }  /* B */
+#string-e-high   { left: 52.7%; } /* E alto */
 
 .string-glow.active {
   opacity: 1;
