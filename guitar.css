@@ -522,8 +522,8 @@ body::before {
 .guitar-image-wrapper {
   position: relative;
   width: auto;
-  height: calc(100vh - 80px);
-  max-height: 800px;
+  height: calc(100vh - 60px);
+  max-height: 935px;
   overflow: visible;
   filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.6));
   display: flex;
@@ -624,8 +624,8 @@ body::before {
   }
   
   .guitar-image-wrapper {
-    height: 55vh; /* Aumentato da 50vh per chitarra più grande anche su mobile */
-    max-height: 600px;
+    height: 64vh; /* Aumentato del 10% da 58vh */
+    max-height: 715px;
   }
   
   .guitar-container {
