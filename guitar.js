@@ -65,6 +65,7 @@ function setMode(mode) {
         modeIndicator.textContent = 'Modalità: Corde Vuote';
         document.getElementById('chord-keys').style.display = 'block';
         document.getElementById('song-keys').style.display = 'none';
+        document.getElementById('song-tabs').style.display = 'none';
         
         updateInstructions([
             '<div class="instruction-item"><kbd>Q W E R T Y</kbd><span>Suona le corde</span></div>'
@@ -73,6 +74,7 @@ function setMode(mode) {
         modeIndicator.textContent = 'Modalità: Canzoni';
         document.getElementById('chord-keys').style.display = 'none';
         document.getElementById('song-keys').style.display = 'block';
+        document.getElementById('song-tabs').style.display = 'block';
         
         // Assicurati che il tasto 4 sia visibile di default in modalità canzoni
         const key4Button = document.getElementById('key-4-button');
@@ -253,6 +255,71 @@ function setupEventListeners() {
             this.classList.remove('active');
         });
     });
+    
+    // Event listeners per le tablature cliccabili
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.clickable-tab')) {
+            const tabElement = event.target.closest('.clickable-tab');
+            const sequence = tabElement.dataset.sequence;
+            if (sequence) {
+                playTabSequence(sequence, tabElement);
+            }
+        }
+    });
+}
+
+// Funzione per riprodurre una sequenza di tablature
+function playTabSequence(sequence, tabElement) {
+    if (!currentSong) return;
+    
+    // Rimuovi highlight da tutte le tabs
+    document.querySelectorAll('.tab-line').forEach(tab => {
+        tab.classList.remove('playing');
+    });
+    
+    // Evidenzia la tab corrente
+    tabElement.classList.add('playing');
+    
+    const notes = sequence.split(',');
+    let currentNoteIndex = 0;
+    
+    // Ferma tutte le note precedenti
+    activeSongSources.forEach(source => {
+        try {
+            source.stop();
+        } catch (e) {}
+    });
+    activeSongSources = [];
+    currentSongSource = null;
+    
+    // Spegni tutte le corde
+    document.querySelectorAll('.string-glow').forEach(string => {
+        string.classList.remove('active');
+    });
+    
+    function playNextNote() {
+        if (currentNoteIndex >= notes.length) {
+            // Sequenza completata, rimuovi highlight
+            setTimeout(() => {
+                tabElement.classList.remove('playing');
+            }, 1000);
+            return;
+        }
+        
+        const note = notes[currentNoteIndex].trim();
+        console.log(`Suonando nota ${note} della sequenza`);
+        
+        // Simula la pressione del tasto
+        handleSongKeyPress(note);
+        
+        currentNoteIndex++;
+        
+        // Programma la prossima nota (500ms di intervallo)
+        setTimeout(playNextNote, 500);
+    }
+    
+    // Inizia la sequenza
+    playNextNote();
 }
 
 function handleKeyPress(event) {
@@ -537,14 +604,29 @@ function selectSong(songId) {
         selectedBtn.classList.add('selected');
     }
     
-    // Gestisci la visibilità del tasto 4 in base alla canzone
+    // Gestisci la visibilità del tasto 4 e delle tablature in base alla canzone
     const key4Button = document.getElementById('key-4-button');
-    if (key4Button) {
-        if (songId === 'satisfaction') {
-            key4Button.style.display = 'none'; // Nascondi il tasto 4 per Satisfaction
-        } else {
-            key4Button.style.display = 'flex'; // Mostra il tasto 4 per altre canzoni
-        }
+    const albumImage = document.getElementById('album-image');
+    const satisfactionTabs = document.getElementById('satisfaction-tabs');
+    const deepPurpleTabs = document.getElementById('deep-purple-tabs');
+    
+    if (songId === 'satisfaction') {
+        // Satisfaction: nascondi tasto 4, mostra tabs satisfaction
+        if (key4Button) key4Button.style.display = 'none';
+        if (albumImage) albumImage.src = 'assets/satisfaction.png';
+        if (satisfactionTabs) satisfactionTabs.style.display = 'flex';
+        if (deepPurpleTabs) deepPurpleTabs.style.display = 'none';
+    } else if (songId === 'deep-purple') {
+        // Smoke on the Water: mostra tasto 4, mostra tabs deep purple
+        if (key4Button) key4Button.style.display = 'flex';
+        if (albumImage) albumImage.src = 'assets/deep-purple.png';
+        if (satisfactionTabs) satisfactionTabs.style.display = 'none';
+        if (deepPurpleTabs) deepPurpleTabs.style.display = 'flex';
+    } else {
+        // Default: mostra tasto 4
+        if (key4Button) key4Button.style.display = 'flex';
+        if (satisfactionTabs) satisfactionTabs.style.display = 'none';
+        if (deepPurpleTabs) deepPurpleTabs.style.display = 'none';
     }
     
     // Aggiorna l'indicatore della modalità

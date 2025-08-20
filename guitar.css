@@ -175,6 +175,111 @@ body::before {
   text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
 }
 
+/* Sezione Tablature */
+.tab-section {
+  margin-bottom: 2rem;
+}
+
+.tab-section h3 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: rgba(255, 107, 107, 0.95);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.tab-container {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.4) 0%, 
+    rgba(255, 107, 107, 0.1) 100%);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 15px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.album-cover {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 107, 107, 0.3);
+}
+
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tabs-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabs-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.song-tabs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.tab-line {
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.08) 0%, 
+    rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab-line:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.2) 0%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  border-color: rgba(255, 107, 107, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+}
+
+.tab-line.playing {
+  background: linear-gradient(135deg, 
+    rgba(255, 107, 107, 0.4) 0%, 
+    rgba(255, 69, 0, 0.3) 100%);
+  border-color: rgba(255, 107, 107, 0.6);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+}
+
+.tab-numbers {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 .key-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -540,5 +645,31 @@ body::before {
   .game-header {
     padding: 1rem;
     font-size: 0.9rem;
+  }
+  
+  /* Tablature responsive */
+  .tab-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .album-cover {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+  }
+  
+  .tabs-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .tab-line {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .tab-numbers {
+    font-size: 1rem;
   }
 }

@@ -46,6 +46,51 @@
             </div>
           </div>
 
+          <!-- Sezione Tablature (visibile solo nelle modalità canzoni) -->
+          <div id="song-tabs" class="tab-section" style="display: none;">
+            <div class="section-header">
+              <span class="section-icon">🎼</span>
+              <h3>Tablature</h3>
+            </div>
+            <div class="tab-container">
+              <!-- Copertina del brano -->
+              <div class="album-cover">
+                <img id="album-image" src="" alt="Album Cover" />
+              </div>
+              
+              <!-- Tablature specifiche per canzone -->
+              <div class="tabs-content">
+                <div class="tabs-title">TABS</div>
+                
+                <!-- Tabs per Satisfaction -->
+                <div id="satisfaction-tabs" class="song-tabs-list" style="display: none;">
+                  <div class="tab-line clickable-tab" data-sequence="1,1">
+                    <span class="tab-numbers">1-1</span>
+                  </div>
+                  <div class="tab-line clickable-tab" data-sequence="1,2,3">
+                    <span class="tab-numbers">1-2-3</span>
+                  </div>
+                  <div class="tab-line clickable-tab" data-sequence="3,3,2,3,2,1">
+                    <span class="tab-numbers">3-3-2-3-2-1</span>
+                  </div>
+                </div>
+                
+                <!-- Tabs per Smoke on the Water -->
+                <div id="deep-purple-tabs" class="song-tabs-list" style="display: none;">
+                  <div class="tab-line clickable-tab" data-sequence="1,2,3">
+                    <span class="tab-numbers">1-2-3</span>
+                  </div>
+                  <div class="tab-line clickable-tab" data-sequence="1,2,4,3">
+                    <span class="tab-numbers">1-2-4-3</span>
+                  </div>
+                  <div class="tab-line clickable-tab" data-sequence="1,2,3,2,1">
+                    <span class="tab-numbers">1-2-3-2-1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Tasti per modalità canzoni (visibili quando modalità = canzoni) -->
           <div id="song-keys" class="key-section" style="display: none;">
             <div class="section-header">
