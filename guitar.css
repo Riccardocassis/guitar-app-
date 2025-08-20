@@ -552,7 +552,7 @@ body::before {
 .string-glow {
   position: absolute;
   top: 0%;
-  height: 60%;
+  height: 50%;
   width: 0.8%;
   opacity: 0;
   transform: translateX(-50%);
